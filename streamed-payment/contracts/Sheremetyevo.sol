@@ -89,7 +89,7 @@ contract Sheremetyevo {
         require(amount > 0, "Amount must be greater than zero");
         require(_balances.get(user) >= amount, "Balance is not enough");
         payable(to).send(uint256(amount));
-        setBalance(user,  _balances.get(user) - amount);
+        _balances.set(user,  _balances.get(user) - amount);
         emit withdrawed(user, uint256(amount));
     }
 
