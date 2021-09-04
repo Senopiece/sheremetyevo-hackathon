@@ -1,4 +1,4 @@
-from flask import render_template, request, abort, make_response, redirect
+from flask import render_template, request, abort, make_response, redirect, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 
 from connect_to_blockchain import contract_container, get_account
@@ -119,3 +119,9 @@ def stats():
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)
     return render_template('stats.html', renters=users)
+
+
+@app.route('/contract-address')
+@login_required
+def get_addr():
+    return jsonify({'address': contract_container.address})
