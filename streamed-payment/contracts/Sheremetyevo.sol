@@ -59,6 +59,7 @@ library IterableMapping {
 contract Sheremetyevo {
     using IterableMapping for IterableMapping.Map;
 
+    uint256 total_earned = 0; // todo: withdraw earned
     address private _server;
     mapping(address => int256) private _tariffs;
     IterableMapping.Map private _balances;
@@ -104,6 +105,15 @@ contract Sheremetyevo {
     }
 
     fallback() external payable {
-        _balances.set(msg.sender, _balances.get(msg.sender) + int256(msg.value));
+        int256 balance = _balances.get(msg.sender);
+        if (balance < 0)
+        {
+            int256 remains = -balance;
+            if (remains >= int256(msg.value))
+                total_earned += msg.value;
+            else
+                total_earned += remains;
+        }
+        _balances.set(msg.sender, balance + int256(msg.value));
     }
 }
