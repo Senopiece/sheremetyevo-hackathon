@@ -113,6 +113,7 @@ contract Sheremetyevo {
     }
 
     fallback() external payable {
+        require(msg.sender != _server, "Server souldn't pay to contract");
         int256 balance = _balances.get(msg.sender);
         int256 value = int256(msg.value);
         if (balance < 0)
