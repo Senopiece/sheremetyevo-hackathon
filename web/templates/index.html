@@ -3,82 +3,85 @@
 {% block head %}{{ super() }}{% endblock %}
 {% block title %}{{ super() }}{% endblock %}
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="{{ url_for('static', filename='js/libs/web3.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/web3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-4">
-        <div class="card text-center">
-            <h2 class="card-header">
-                Последние платежи
-            </h2>
+    <div class="row">
+        <div class="col-4">
+            <div class="card text-center">
+                <h2 class="card-header">
+                    Последние платежи
+                </h2>
 
-            <div class="card-body transaction-block">
-                {% for i, trans in transactions %}
-                <div class="row align-items-center">
-                    <div class="col-3 col-date">
-                        <p>4 Марта</p>
-                        <p>12:20</p>
-                    </div>
-                    <div class="vl-line"></div>
-                    <div class="col-6">
-                        <div class="row align-items-center m-0">
-                            <img class="mr-2" src="{{ url_for('static', filename='images/pending.svg') }}">
-                            <div class="flex-column">
-                                <p class="mb-0">Ожидает подтверждения</p>
-                                <h5>0x8088c0...5356d271</h5>
+                <div class="card-body transaction-block">
+                    {% for i, trans in transactions %}
+                        <div class="row align-items-center">
+                            <div class="col-3 col-date">
+                                <p>4 Марта</p>
+                                <p>12:20</p>
+                            </div>
+                            <div class="vl-line"></div>
+                            <div class="col-6">
+                                <div class="row align-items-center m-0">
+                                    <img class="mr-2" src="{{ url_for('static', filename='images/pending.svg') }}">
+                                    <div class="flex-column">
+                                        <p class="mb-0">Ожидает подтверждения</p>
+                                        <h5>0x8088c0...5356d271</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vl-line"></div>
+                            <div class="col-3">
+                                <p>{{ trans }}</p>
+                                <h4 class="mb-0">50,000 ₽</h4>
                             </div>
                         </div>
-                    </div>
-                    <div class="vl-line"></div>
-                    <div class="col-3">
-                        <p>{{trans}}</p>
-                        <h4 class="mb-0">50,000 ₽</h4>
-                    </div>
+                    {% endfor %}v
                 </div>
-                {% endfor %}v
-            </div>
 
-        </div>
-    </div>
-    <div class="col-4">
-        <div class="card text-center">
-            <div class="card-body">
-                <h1 class="card-title">Арендный счет</h1>
-                <h3 class="card-text">{{ "{:,.2f}₽".format(balance) }}</h3>
-                <button class="btn btn-light mt-1 w-75" onclick="buy()">Пополнить счет</button>
-                <button class="btn btn-light mt-1 w-75" onclick="withdraw()">Снять со счета</button>
             </div>
         </div>
-    </div>
-    <div class="col-4">
-        <div class="card text-center">
-            <h2 class="card-header">
-                Текущее состояние
-            </h2>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-8">
-                        <p>Оплата в день:</p>
-                        <p>Заработано сегодня:</p>
-                        <p>Оплачено сегодня:</p>
-                        <p>Выведено сегодня:</p>
+        <div class="col-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h1 class="card-title">Арендный счет</h1>
+                    <h3 class="card-text">{{ "{:,.2f}₽".format(balance) }}</h3>
+                    <button class="btn btn-light mt-1 w-75" onclick="buy()">Пополнить счет</button>
+                    <div>
+                        <p>Сумма для снятия</p><input type="number" step="0.01" value="0" id="withdraw-amount">
                     </div>
-                    <div class="col-4">
-                        <p>{{ "{:,.2f}₽".format(tariff) }}</p>
-                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
-                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
-                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                    <button class="btn btn-light mt-1 w-75" onclick="withdraw($('#withdraw-amount')[0].value)">Снять со счета</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card text-center">
+                <h2 class="card-header">
+                    Текущее состояние
+                </h2>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <p>Оплата в день:</p>
+                            <p>Заработано сегодня:</p>
+                            <p>Оплачено сегодня:</p>
+                            <p>Выведено сегодня:</p>
+                        </div>
+                        <div class="col-4">
+                            <p>{{ "{:,.2f}₽".format(tariff) }}</p>
+                            <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                            <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                            <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}
