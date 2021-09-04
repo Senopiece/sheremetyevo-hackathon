@@ -19,7 +19,7 @@
             </h2>
 
             <div class="card-body transaction-block">
-                {% for i in range(5) %}
+                {% for i, trans in enumerate(transactions) %}
                 <div class="row align-items-center">
                     <div class="col-3 col-date">
                         <p>4 Марта</p>
@@ -37,6 +37,7 @@
                     </div>
                     <div class="vl-line"></div>
                     <div class="col-3">
+                        <p>{{trans}}</p>
                         <h4 class="mb-0">50,000 ₽</h4>
                     </div>
                 </div>
@@ -49,7 +50,7 @@
         <div class="card text-center">
             <div class="card-body">
                 <h1 class="card-title">Арендный счет</h1>
-                <h3 class="card-text">120,021₽</h3>
+                <h3 class="card-text">{{ "{:,.2f}₽".format(balance) }}</h3>
                 <a class="btn btn-light mt-1 w-75">Пополнить счет</a>
             </div>
         </div>
@@ -68,9 +69,9 @@
                         <p>Время до списания:</p>
                     </div>
                     <div class="col-4">
-                        <p>50,000 ₽</p>
-                        <p>1,667 ₽</p>
-                        <p>72 дня</p>
+                        <p>{{ "{:,.2f}₽".format(tariff*30) }}</p>
+                        <p>{{ "{:,.2f}₽".format(tariff) }}</p>
+                        <p>{{ balance//tariff }} дн</p>
                         <p>5 ч 12 мин</p>
                     </div>
                 </div>
