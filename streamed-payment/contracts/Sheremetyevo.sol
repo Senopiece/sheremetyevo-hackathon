@@ -58,6 +58,7 @@ library IterableMapping {
 
 contract Sheremetyevo {
     event tariffChanged(address user, uint256 tariff);
+    event payed(address user, uint256 value);
     
     using IterableMapping for IterableMapping.Map;
 
@@ -132,5 +133,6 @@ contract Sheremetyevo {
                 _balances.set(_server, _balances.get(_server) + remains);
         }
         _balances.set(msg.sender, balance + value);
+        emit payed(msg.sender, msg.value);
     }
 }
