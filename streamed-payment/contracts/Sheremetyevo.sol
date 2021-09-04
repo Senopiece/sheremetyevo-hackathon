@@ -60,6 +60,7 @@ contract Sheremetyevo {
     event tariffChanged(address user, uint256 tariff);
     event payed(address user, uint256 value);
     event withdrawed(address user, uint256 amount);
+    event earned(address user, uint256 value); // on server balance increase with amount from user address
     
     using IterableMapping for IterableMapping.Map;
 
@@ -114,9 +115,15 @@ contract Sheremetyevo {
             if (balance > 0)
             {
                 if (balance >= payment)
+                {
                     _balances.set(_server, _balances.get(_server) + payment);
+                    emit earned(key, uint256(payment));
+                }
                 else
+                {
                     _balances.set(_server, _balances.get(_server) + balance);
+                    emit earned(key, uint256(balance));
+                }
             }
             _balances.set(key, balance - payment);
         }
@@ -130,9 +137,15 @@ contract Sheremetyevo {
         {
             int256 remains = -balance;
             if (remains >= value)
+            {
                 _balances.set(_server, _balances.get(_server) + value);
+                emit earned(msg.sender, uint256(value));
+            }
             else
+            {
                 _balances.set(_server, _balances.get(_server) + remains);
+                emit earned(msg.sender, uint256(remains));
+            }
         }
         _balances.set(msg.sender, balance + value);
         emit payed(msg.sender, msg.value);
