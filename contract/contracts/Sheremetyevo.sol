@@ -60,7 +60,7 @@ contract Sheremetyevo {
     using IterableMapping for IterableMapping.Map;
 
     address private _server;
-    mapping(address => uint256) private _tariffs;
+    mapping(address => int256) private _tariffs;
     IterableMapping.Map private _balances;
 
     modifier only_for_server() {
@@ -72,7 +72,8 @@ contract Sheremetyevo {
         _server = msg.sender;
     }
 
-    function set(address user, uint256 tariff) public only_for_server {
+    function set(address user, int256 tariff) public only_for_server {
+        require(tariff > 0, "Tariff must be greater than zero");
         _tariffs[user] = tariff;
     }
 
@@ -80,15 +81,18 @@ contract Sheremetyevo {
         _balances.set(user, balance);
     }
 
-    function withdraw(address from, address to, uint256 amount) public only_for_server {
+    function withdraw(address from, address to, int256 amount) public only_for_server {
+        require(amount > 0, "Amount must be greater than zero");
         require(_balances.get(from) >= amount, "Balance is not enough");
+        setBalance(from, this.getBalance(from) - amount);
+        setBalance(to, this.getBalance(to) + amount);
     }
 
-    function getBalance(address user) external view returns (uint256) {
+    function getBalance(address user) external view returns (int256) {
         return _balances.get(user);
     }
 
-    function getTariff(address user) external view returns (uint256) {
+    function getTariff(address user) external view returns (int256) {
         return _tariffs[user];
     }
 
@@ -100,6 +104,6 @@ contract Sheremetyevo {
     }
 
     fallback() external payable {
-        _balances.set(msg.sender, _balances.get(msg.sender) + msg.value);
+        _balances.set(msg.sender, _balances.get(msg.sender) + int256(msg.value));
     }
 }
