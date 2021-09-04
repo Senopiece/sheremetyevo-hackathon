@@ -11,15 +11,14 @@ async function init() {
         var contract_address = "0xTODO";
         var user_address = window.ethereum.selectedAddress;
         fetch("static/js/abi/Sheremetyevo.json")
-            .then(response => {
-                return response.json();
-            })
+            .then(response => response.json())
             .then(
-                data => {
-                    contract = new web3.eth.Contract(data["abi"], contract_address);
+                data => fetch("/contract-address").then(response => response.json()).
+                then(address => {
+                    contract = new web3.eth.Contract(data["abi"], address["address"]);
                     console.log(contract);
                 }
-            );
+            ));
         // var contract = new web3.eth.Contract(abi, contract_address);
         // console.log(user_address, contract, contract_address);
     }
