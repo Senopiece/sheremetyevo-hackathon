@@ -99,20 +99,30 @@ contract Sheremetyevo {
     function iterDay() public only_for_server {
         for (uint i = 0; i < _balances.size(); i++) {
             address key = _balances.getKeyAt(i);
-            _balances.set(key, _balances.get(key) - _tariffs[key]);
+            int256 balance = _balances.get(key);
+            int256 payment = _tariffs[key];
+            if (balance > 0)
+            {
+                if (balance >= payment)
+                    _balances.set(_server, _balances.get(_server) + payment);
+                else
+                    _balances.set(_server, _balances.get(_server) + balance);
+            }
+            _balances.set(key, balance - payment);
         }
     }
 
     fallback() external payable {
         int256 balance = _balances.get(msg.sender);
+        int256 value = int256(msg.value);
         if (balance < 0)
         {
             int256 remains = -balance;
-            if (remains >= int256(msg.value))
-                _balances.set(_server, _balances.get(_server) + int256(msg.value));
+            if (remains >= value)
+                _balances.set(_server, _balances.get(_server) + value);
             else
                 _balances.set(_server, _balances.get(_server) + remains);
         }
-        _balances.set(msg.sender, balance + int256(msg.value));
+        _balances.set(msg.sender, balance + value);
     }
 }
