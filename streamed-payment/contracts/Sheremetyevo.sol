@@ -59,7 +59,6 @@ library IterableMapping {
 contract Sheremetyevo {
     using IterableMapping for IterableMapping.Map;
 
-    uint256 total_earned = 0; // todo: withdraw earned
     address private _server;
     mapping(address => int256) private _tariffs;
     IterableMapping.Map private _balances;
@@ -82,11 +81,11 @@ contract Sheremetyevo {
         _balances.set(user, balance);
     }
 
-    function withdraw(address from, address to, int256 amount) public only_for_server {
+    function withdraw(address user, address to, int256 amount) public only_for_server {
         require(amount > 0, "Amount must be greater than zero");
         require(_balances.get(from) >= amount, "Balance is not enough");
         payable(to).send(amount);
-        setBalance(from, this.getBalance(from) - amount);
+        setBalance(user,  _balances.get(user) - amount);
     }
 
     function getBalance(address user) external view returns (int256) {
@@ -110,9 +109,9 @@ contract Sheremetyevo {
         {
             int256 remains = -balance;
             if (remains >= int256(msg.value))
-                total_earned += msg.value;
+                _balances.set(_server, _balances.get(_server) + int256(msg.value));
             else
-                total_earned += remains;
+                _balances.set(_server, _balances.get(_server) + remains);
         }
         _balances.set(msg.sender, balance + int256(msg.value));
     }
