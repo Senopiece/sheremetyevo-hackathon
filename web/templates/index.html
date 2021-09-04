@@ -63,16 +63,16 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-8">
-                        <p>Арендная плата:</p>
                         <p>Оплата в день:</p>
-                        <p>Дней до просрочки:</p>
-                        <p>Время до списания:</p>
+                        <p>Заработано сегодня:</p>
+                        <p>Оплачено сегодня:</p>
+                        <p>Выведено сегодня:</p>
                     </div>
                     <div class="col-4">
-                        <p>{{ "{:,.2f}₽".format(tariff*30) }}</p>
                         <p>{{ "{:,.2f}₽".format(tariff) }}</p>
-                        <p>{{ balance//tariff }} дн</p>
-                        <p>{{ next_upd }}</p>
+                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
+                        <p>{{ "{:,.2f}₽".format(balance) }} руб</p>
                     </div>
                 </div>
             </div>
