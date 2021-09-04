@@ -2,6 +2,5 @@ networks:
     default: development
     development:
       cmd_settings:
-          account: 0x9890e724cd3243c9824dbf097ba9dc08be516bc86a87b4148e190b13ca6cb1b6,100
-              0x1e58173eabaf54154eec994665efce0629a633dd422f6327c834444d40589090,100
-            0x764d121e92168f614406ec35061a8bac3430229ba3ed42731cc746f935adefd8,100
+          unlock: ['0xc1B30B3ED830405C72984105568bD3fcD190Ea52', '0x0b8C7aB0c093f69B7677Ed457cD9184C2ff99B5d',
+                   '0x695aB551Ae196059108E3b2A35D38317AaCEC75d', '0xA400eaA1be40149b8963D9747d8c85f2F15C2082']
