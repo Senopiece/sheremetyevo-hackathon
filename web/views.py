@@ -3,6 +3,7 @@ from flask import render_template
 from connect_to_blockchain import connect
 from web import app, login_manager
 from web.models import *
+from brownie import history
 
 contract_container = connect()
 
@@ -20,7 +21,7 @@ def home():
 @app.route('/renter/<renter_id>')
 def renter_info(renter_id: int):
     user = User.query.get(renter_id)
-    error, balance, tariff, name, transactions = [None] * 5
+    error, balance, tariff, name, transactions, account = [None] * 6
     if user is None:
         error = 'Пользователь не найден'
     elif not user.is_renter:
@@ -29,7 +30,8 @@ def renter_info(renter_id: int):
         balance = contract_container.getBalance(user.account)
         tariff = contract_container.getTariff(user.account)
         name = user.username
-        transactions = [[], []]  # TODO: get last transactions
+        account = user.account
+        transactions = history.filter(sender=account)
     return render_template('renter.html', msg=error, balance=balance, tariff=tariff, name=name,
                            transactions=enumerate(transactions))
 
