@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block head %}{{ super() }}{% endblock %}
+{% block title %}{{ super() }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-4">
+        <div class="card text-center">
+            <h2 class="card-header">
+                Последние платежи
+            </h2>
+
+            <div class="card-body transaction-block">
+                {% for i in range(5) %}
+                <div class="row align-items-center">
+                    <div class="col-3 col-date">
+                        <p>4 Марта</p>
+                        <p>12:20</p>
+                    </div>
+                    <div class="vl-line"></div>
+                    <div class="col-6">
+                        <div class="row align-items-center m-0">
+                            <img class="mr-2" src="{{ url_for('static', filename='images/pending.svg') }}">
+                            <div class="flex-column">
+                                <p class="mb-0">Ожидает подтверждения</p>
+                                <h5>0x8088c0...5356d271</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vl-line"></div>
+                    <div class="col-3">
+                        <h4 class="mb-0">50,000 ₽</h4>
+                    </div>
+                </div>
+                {% endfor %}v
+            </div>
+
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h1 class="card-title">Арендный счет</h1>
+                <h3 class="card-text">120 021₽</h3>
+                <a class="btn btn-light mt-1 w-75">Пополнить счет</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center">
+            <h2 class="card-header">
+                Текущее состояние
+            </h2>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <p>Арендная плата:</p>
+                        <p>Оплата в день:</p>
+                        <p>Дней до просрочки:</p>
+                        <p>Время до списания:</p>
+                    </div>
+                    <div class="col-4">
+                        <p>50,000 ₽</p>
+                        <p>1,667 ₽</p>
+                        <p>72 дня</p>
+                        <p>5 ч 12 мин</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

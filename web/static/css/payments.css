@@ -1,0 +1,13 @@
+.transaction-block p {
+    margin-bottom: 5px;
+    color: rgba(72, 83, 91, 0.8);
+}
+
+.card-body {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.col-date {
+    text-align: start;
+}

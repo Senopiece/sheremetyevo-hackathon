@@ -1,0 +1,30 @@
+:root {
+    --transaction-row-height: 66px;
+}
+
+.vl-line {
+    height: calc(var(--transaction-row-height) - 20px);
+
+    /* Black */
+    border: 1px solid #E5E5E5;
+    transform: rotate(-180deg);
+
+    /* Inside Auto Layout */
+    flex: none;
+    flex-grow: 0;
+    margin: 0 -1px;
+}
+
+.transaction-block p {
+    margin-bottom: 5px;
+    color: rgba(72, 83, 91, 0.8);
+}
+
+.card-body {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+.col-date {
+    text-align: start;
+}

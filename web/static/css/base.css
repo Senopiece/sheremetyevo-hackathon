@@ -1,0 +1,50 @@
+:root {
+    --font-family-sans-serif: Roboto, serif;
+    --navbar-height: 60px;
+    --text-color: rgba(72, 83, 91);
+}
+
+.navbar {
+    height: var(--navbar-height);
+    margin: 0;
+    padding: 0;
+}
+
+.navbar a {
+    color: var(--text-color);
+}
+
+.btn-dark {
+    color: #fff!important;
+    background-color: #FFAC02;
+    border-color: #FFAC02;
+}
+
+.navbar a:hover {
+    color: #FFAC02;
+}
+
+.nav {
+    position: absolute;
+    left: 0;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    width: min-content;
+    display: block ruby;
+}
+
+h1, h2, h3, h4, h5, h6, p, a {
+    color: var(--text-color);
+}
+
+
+.logo-img {
+    height: 30px;
+}
+
+body {
+    margin-left: 90px;
+    margin-right: 90px;
+}

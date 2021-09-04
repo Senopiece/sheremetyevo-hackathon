@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <script src="{{ url_for('static', filename='js/libs/jquery-3.3.1.slim.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/libs/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/libs/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+        {% block css %}{% endblock %}
+
+        <title>{% block title %}Аренда{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+<div id="nav-bar">{% block navbar %}
+    <nav class="navbar navbar-light">
+        <a href="/" class="logo">
+            <img alt="Логотип"
+                 src="{{ url_for('static', filename='images/logo.svg') }}"
+                 class="logo-img">
+        </a>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Главная</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/payments">Внесенные платежи</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/stats">Статистика</a>
+            </li>
+        </ul>
+        <div class="d-flex align-items-center">
+            {% if current_user.is_authenticated %}
+<!--                <li class="pr-4 font-weight-bolder">Здравствуй, {{ current_user.get_me()["first_name"] }}</li>-->
+
+<!--                <div class="btn-group">-->
+<!--                <button class="dropdown-toggle remove-btn" type="button" id="dropdownMenuButton"-->
+<!--                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                    <img alt="Аватар"-->
+<!--                         src="{{ current_user.get_me()["avatar"] }}"-->
+<!--                         class="avatar" style="object-fit: cover; width: 50px; height:50px;">-->
+<!--                </button>-->
+<!--                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">-->
+<!--                    <div class="d-flex flex-column menu">-->
+<!--                        <a href="/auth/steam">Войти в Steam</a>-->
+<!--                        <a href="/auth/battlenet">Войти в Battle.net</a>-->
+<!--                        <a href="/profile">Профиль</a>-->
+<!--                        <a href="/auth/logout">Выйти из аккаунта</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+            {% else %}
+                <a href="/auth/login" type="button" class="btn btn-light mx-3">Войти</a>
+                    <a href="/auth/register" type="button" class="btn btn-dark mx-3">Зарегистрироваться</a>
+            {% endif %}
+            </div>
+    </nav>
+{% endblock %}</div>
+
+<div id="content" class="mt-3">{% block content %}{% endblock %}</div>
+</body>
+<footer>
+    {% block footer %}{% endblock %}
+</footer>
+</html>
+
+{% block js %}{% endblock %}

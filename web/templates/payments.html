@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}{{ super() }}{% endblock %}
+{% block title %}{{ super() }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/payments.css') }}"/>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/payments.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+    <h2 class="card-header">
+        Последние платежи
+    </h2>
+
+    <div class="card-body transaction-block">
+        {% for i in range(10) %}
+        <div class="row align-items-center">
+            <div class="col-1 col-date">
+                <p>4 Марта</p>
+                <p>12:20</p>
+            </div>
+            <div class="vl-line"></div>
+            <div class="col-6">
+                <div class="row align-items-center m-0">
+                    <img class="mr-2" src="{{ url_for('static', filename='images/pending.svg') }}">
+                    <div class="flex-column">
+                        <p class="mb-0">Ожидает подтверждения</p>
+                        <h5>0x8088c0...5356d271</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="vl-line"></div>
+            <div class="col-5">
+                <h4 class="mb-0">50,000 ₽</h4>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
