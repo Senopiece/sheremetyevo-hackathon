@@ -59,6 +59,7 @@ library IterableMapping {
 contract Sheremetyevo {
     event tariffChanged(address user, uint256 tariff);
     event payed(address user, uint256 value);
+    event withdrawed(address user, uint256 amount);
     
     using IterableMapping for IterableMapping.Map;
 
@@ -92,6 +93,7 @@ contract Sheremetyevo {
         require(_balances.get(user) >= amount, "Balance is not enough");
         payable(to).send(uint256(amount));
         setBalance(user,  _balances.get(user) - amount);
+        emit withdrawed(user, uint256(amount));
     }
 
     function getBalance(address user) external view returns (int256) {
