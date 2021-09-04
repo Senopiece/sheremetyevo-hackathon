@@ -1,10 +1,8 @@
 from flask import render_template
 
-from connect_to_blockchain import connect
+from connect_to_blockchain import contract_container
 from web import app, login_manager
 from web.models import *
-
-contract_container = connect()
 
 
 @login_manager.user_loader
