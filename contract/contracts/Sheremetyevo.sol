@@ -59,28 +59,28 @@ library IterableMapping {
 contract Sheremetyevo {
     using IterableMapping for IterableMapping.Map;
 
-    address private _owner;
+    address private _server;
     mapping(address => uint256) private _tariffs;
     IterableMapping.Map private _balances;
 
-    modifier only_for_owner() {
-        require(msg.sender == _owner, "Only owner can call this method");
+    modifier only_for_server() {
+        require(msg.sender == _server, "Only owner can call this method");
         _;
     }
 
     constructor() {
-        _owner = msg.sender;
+        _server = msg.sender;
     }
 
-    function set(address user, uint256 tariff) public only_for_owner {
+    function set(address user, uint256 tariff) public only_for_server {
         _tariffs[user] = tariff;
     }
 
-    function setBalance(address user, int256 balance) public only_for_owner {
+    function setBalance(address user, int256 balance) public only_for_server {
         _balances.set(user, balance);
     }
 
-    function withdraw(address from, address to, uint256 amount) public only_for_owner {
+    function withdraw(address from, address to, uint256 amount) public only_for_server {
         require(_balances.get(from) >= amount, "Balance is not enough");
     }
 
@@ -92,7 +92,7 @@ contract Sheremetyevo {
         return _tariffs[user];
     }
 
-    function iterDay() public only_for_owner {
+    function iterDay() public only_for_server {
         for (uint i = 0; i < _balances.size(); i++) {
             address key = _balances.getKeyAt(i);
             _balances.set(key, _balances.get(key) - _tariffs[key]);
