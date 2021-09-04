@@ -79,7 +79,7 @@ contract Sheremetyevo {
     function set(address user, int256 tariff) public only_for_server {
         require(tariff > 0, "Tariff must be greater than zero");
         _tariffs[user] = tariff;
-        emit tariffChanged(user, tariff);
+        emit tariffChanged(user, uint256(tariff));
     }
 
     function setBalance(address user, int256 balance) public only_for_server {
