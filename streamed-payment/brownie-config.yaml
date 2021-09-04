@@ -1,0 +1,6 @@
+networks:
+    default: development
+    development:
+      cmd_settings:
+          account: 0x9890e724cd3243c9824dbf097ba9dc08be516bc86a87b4148e190b13ca6cb1b6,100
+              0x1e58173eabaf54154eec994665efce0629a633dd422f6327c834444d40589090,100
