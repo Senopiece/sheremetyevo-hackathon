@@ -1,7 +1,7 @@
 from flask import render_template, request
 from flask_login import current_user
 
-from connect_to_blockchain import contract_container, owner_account
+from connect_to_blockchain import contract_container, get_account
 from iter_day import time_to_update
 from web import app, login_manager
 from web.models import *
@@ -47,14 +47,10 @@ def renter_info(renter_id: int):
         tariff = contract_container.getTariff(user.account)
         name = user.username
         if request.method == 'POST':
-            new_balance = int(request.form.get('balance'))
             new_tariff = int(request.form.get('tariff'))
-            if new_balance != balance:
-                contract_container.setBalance(user.account, new_balance, {'from': owner_account})
-                balance = new_balance
-                msg = 'Сохранено'
             if new_tariff != tariff:
-                contract_container.set(user.account, new_tariff, {'from': owner_account})
+                contract_container.set(user.account, new_tariff,
+                                       {'from': get_account(user.account)})
                 tariff = new_tariff
                 msg = 'Сохранено'
     return render_template('renter.html', error=error, balance=balance,

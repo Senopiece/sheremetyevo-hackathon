@@ -1,3 +1,4 @@
+import brownie.network.account
 from brownie import project
 from brownie import network
 
@@ -26,6 +27,10 @@ def connect():
         contract_container = brownie_project.Sheremetyevo.deploy({'from': owner_account})
     else:
         contract_container = brownie_project.Sheremetyevo.at(CONTRACT_ADDRESS)
+
+
+def get_account(address) -> brownie.network.account.Account:
+    return network.accounts.at(address, force=DEBUG)
 
 
 if contract_container is None:
