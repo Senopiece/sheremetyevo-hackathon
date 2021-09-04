@@ -38,19 +38,19 @@
         <th scope="col" id="id">#</th>
         <th scope="col" data-sortable="true">Имя</th>
         <th scope="col" data-sortable="true" data-sorter="priceSorter">Баланс</th>
-        <th scope="col" data-sortable="true" data-sorter="priceSorter">Оплата аренды за месяц</th>
+        <th scope="col" data-sortable="true" data-sorter="priceSorter">Тариф в день</th>
         <th scope="col" data-sortable="true" data-sorter="priceSorter">Доход за месяц</th>
     </tr>
     </thead>
     <tbody>
-    {% for i in range(1, 10) %}
-    <tr>
-        <th scope="row">{{ i }}</th>
-        <td><a href="/renter/{{ i }}">ООО "Быстро Бургер"</a></td>
-        <td>{{ i*2643+1020 }}₽</td>
-        <td style="color: red;">-27,124₽</td>
-        <td style="color: green;">+45,540₽</td>
-    </tr>
+    {% for renter in renters %}
+        <tr>
+            <th scope="row">{{ renter.id }}</th>
+            <td><a href="/renter/{{ renter.id }}">{{ renter.username }}</a></td>
+            <td>{{ renter.balance }}₽</td>
+            <td style="color: red;">{{ renter.tariff }}₽</td>
+            <td style="color: green;">+45,540₽</td>
+        </tr>
     {% endfor %}
     <!--    <tr>-->
     <!--      <th scope="row">2</th>-->

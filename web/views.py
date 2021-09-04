@@ -3,7 +3,6 @@ from flask_login import current_user
 
 from connect_to_blockchain import contract_container
 from iter_day import time_to_update
-import datetime as dt
 from web import app, login_manager
 from web.models import *
 from brownie import history
@@ -53,14 +52,13 @@ def renter_info(renter_id: int):
                            transactions=enumerate(transactions))
 
 
-@app.route('/renters')
-def renters():
-    pass
-
-
 @app.route('/stats')
 def stats():
-    return render_template('stats.html')
+    users = list(User.query.filter(User.is_renter))
+    for user in users:
+        user.balance = contract_container.getBalance(user.account)
+        user.tariff = contract_container.getTariff(user.account)
+    return render_template('stats.html', renters=users)
 
 
 @app.route('/payments')
