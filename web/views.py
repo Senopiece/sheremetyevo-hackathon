@@ -2,6 +2,8 @@ from flask import render_template
 from flask_login import current_user
 
 from connect_to_blockchain import contract_container
+from iter_day import time_to_update
+import datetime as dt
 from web import app, login_manager
 from web.models import *
 from brownie import history
@@ -26,8 +28,11 @@ def home():
         name = user.username
         account = user.account
         transactions = history.filter(sender=account)
-    return render_template('index.html', balance=balance, tariff=tariff, name=name,
-                           transactions=enumerate(transactions))
+    return render_template('index.html', balance=balance if balance else 0,
+                           tariff=tariff if tariff else 1, name=name,
+                           transactions=enumerate(transactions if transactions else []),
+                           next_upd='%d ч %d мин' %
+                                    (time_to_update[0] // 3600, (time_to_update[0] // 60) % 60))
 
 
 @app.route('/renter/<renter_id>')
