@@ -1,10 +1,8 @@
 from flask import render_template
 
-from connect_to_blockchain import connect
+from connect_to_blockchain import contract_container
 from web import app, login_manager
 from web.models import *
-
-contract_container = connect()
 
 
 @login_manager.user_loader
@@ -31,7 +29,7 @@ def renter_info(renter_id: int):
         name = user.username
         transactions = [[], []]  # TODO: get last transactions
     return render_template('renter.html', msg=error, balance=balance, tariff=tariff, name=name,
-                           transactions=transactions)
+                           transactions=enumerate(transactions))
 
 
 @app.route('/renters')

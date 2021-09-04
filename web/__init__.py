@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from decouple import config
 
 import logging
+from threading import Thread
 
+from iter_day import iter_day
 from constants import SECRET_KEY, DEBUG, DB_URI
 
 app = Flask(__name__)
@@ -23,5 +25,7 @@ login_manager.init_app(app)
 from web.views import *
 
 if __name__ == '__main__':
+    thread = Thread(target=iter_day)
+    thread.start()
     app.debug = config("DEBUG", cast=bool, default=False)
     app.run("0.0.0.0", port=8000)

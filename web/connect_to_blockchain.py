@@ -3,8 +3,11 @@ from brownie import network
 
 from constants import CONTRACT_ADDRESS, OWNER_ADDRESS, DEBUG
 
+owner_account, contract_container = [None] * 2
+
 
 def connect():
+    global owner_account, contract_container
     brownie_project = project.load('../streamed-payment', name='StreamedPayment')
     brownie_project.load_config()
 
@@ -23,4 +26,7 @@ def connect():
         contract_container = brownie_project.Sheremetyevo.deploy({'from': owner_account})
     else:
         contract_container = brownie_project.Sheremetyevo.at(CONTRACT_ADDRESS)
-    return contract_container
+
+
+if contract_container is None:
+    connect()
