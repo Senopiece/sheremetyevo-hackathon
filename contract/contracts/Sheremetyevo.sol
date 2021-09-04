@@ -4,12 +4,12 @@ library IterableMapping {
     // Iterable mapping from address to uint;
     struct Map {
         address[] keys;
-        mapping(address => uint256) values;
+        mapping(address => int256) values;
         mapping(address => uint) indexOf;
         mapping(address => bool) inserted;
     }
 
-    function get(Map storage map, address key) public view returns (uint) {
+    function get(Map storage map, address key) public view returns (int256) {
         return map.values[key];
     }
 
@@ -24,7 +24,7 @@ library IterableMapping {
     function set(
         Map storage map,
         address key,
-        uint val
+        int256 val
     ) public {
         if (map.inserted[key]) {
             map.values[key] = val;
@@ -76,7 +76,7 @@ contract Sheremetyevo {
         _tariffs[user] = tariff;
     }
 
-    function setBalance(address user, uint256 balance) public only_for_owner {
+    function setBalance(address user, int256 balance) public only_for_owner {
         _balances.set(user, balance);
     }
 
