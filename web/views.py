@@ -27,10 +27,15 @@ def register():
             return render_template('register.html', form=form,
                                    message='Пользователь с таким логином уже существует',
                                    message_type='danger')
+        if db.session.query(User).filter(User.account == form.account_address.data).first():
+            return render_template('register.html', form=form,
+                                   message='Пользователь с таким адресом аккаунта уже существует',
+                                   message_type='danger')
         user = User()
         user.username = form.login.data
         user.account = form.account_address.data
         user.set_password(form.password.data)
+        user.is_renter = True
         db.session.add(user)
         db.session.commit()
         return render_template('register.html', form=form,
@@ -58,6 +63,7 @@ def logout():
     return redirect('/')
 
 
+@login_required
 @app.route('/')
 def home():
     whoami = db.session.query(User).get(current_user.get_id())
@@ -79,6 +85,7 @@ def home():
                                     (time_to_update[0] // 3600, (time_to_update[0] // 60) % 60))
 
 
+@login_required
 @app.route('/renter/<renter_id>', methods=['GET', 'POST'])
 def renter_info(renter_id: int):
     whoami = db.session.query(User).get(current_user.get_id())
@@ -105,8 +112,12 @@ def renter_info(renter_id: int):
                            tariff=tariff, name=name, msg=msg)
 
 
-@app.route('/stats')
+@login_required
+@app.route('/admin')
 def stats():
+    whoami = db.session.query(User).get(current_user.get_id())
+    if whoami is None or whoami.is_renter:
+        abort(401, 'Доступ запрещён')
     users = list(db.session.query(User).filter(User.is_renter))
     for user in users:
         user.balance = contract_container.getBalance(user.account)
@@ -114,6 +125,7 @@ def stats():
     return render_template('stats.html', renters=users)
 
 
+@login_required
 @app.route('/payments')
 def payments():
     return render_template('payments.html')
