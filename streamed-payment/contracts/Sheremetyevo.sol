@@ -57,10 +57,12 @@ library IterableMapping {
 }
 
 contract Sheremetyevo {
+    event tariffChanged(address user, uint256 tariff);
+    
     using IterableMapping for IterableMapping.Map;
 
-    address private _server;
     uint256 last_iter;
+    address private _server;
     mapping(address => int256) private _tariffs;
     IterableMapping.Map private _balances;
 
@@ -77,6 +79,7 @@ contract Sheremetyevo {
     function set(address user, int256 tariff) public only_for_server {
         require(tariff > 0, "Tariff must be greater than zero");
         _tariffs[user] = tariff;
+        emit tariffChanged(user, tariff);
     }
 
     function setBalance(address user, int256 balance) public only_for_server {
