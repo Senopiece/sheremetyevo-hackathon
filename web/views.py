@@ -1,31 +1,76 @@
-from flask import render_template, request
-from flask_login import current_user
+from flask import render_template, request, abort, make_response, redirect
+from flask_login import current_user, login_required, login_user, logout_user
 
 from connect_to_blockchain import contract_container, get_account
 from iter_day import time_to_update
-from web import app, login_manager
+from forms import RegisterForm, LoginForm
+from web import app, login_manager, db
 from web.models import *
 from brownie import history
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(user_id)
+    return db.session.query(User).get(user_id)
+
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return make_response(render_template('renter.html', error=error), 401)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if db.session.query(User).filter(User.username == form.login.data).first():
+            return render_template('register.html', form=form,
+                                   message='Пользователь с таким логином уже существует',
+                                   message_type='danger')
+        user = User()
+        user.username = form.login.data
+        user.account = form.account_address.data
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return render_template('register.html', form=form,
+                               message='Аккаунт успешно создан', message_type='success')
+    return render_template('register.html', form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.query(User).filter(User.username == form.login.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect('/')
+        return render_template('login.html', message_type='danger',
+                               message='Неправильный логин или пароль', form=form)
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 
 @app.route('/')
 def home():
-    user = User.query.get(current_user.get_id())
+    whoami = db.session.query(User).get(current_user.get_id())
     error, balance, tariff, name, transactions, account = [None] * 6
-    if user is None:
+    if whoami is None:
         error = 'Пользователь не найден'
-    elif not user.is_renter:
+    elif not whoami.is_renter:
         error = 'Пользователь не является арендатором'
     else:
-        balance = contract_container.getBalance(user.account)
-        tariff = contract_container.getTariff(user.account)
-        name = user.username
-        account = user.account
+        balance = contract_container.getBalance(whoami.account)
+        tariff = contract_container.getTariff(whoami.account)
+        name = whoami.username
+        account = whoami.account
         transactions = history.filter(sender=account)
     return render_template('index.html', balance=balance if balance else 0,
                            tariff=tariff if tariff else 1, name=name,
@@ -36,9 +81,12 @@ def home():
 
 @app.route('/renter/<renter_id>', methods=['GET', 'POST'])
 def renter_info(renter_id: int):
-    user = User.query.get(renter_id)
+    whoami = db.session.query(User).get(current_user.get_id())
+    user = db.session.query(User).get(renter_id)
     error, balance, tariff, name, transactions, account, msg = [None] * 7
-    if user is None:
+    if whoami is None or whoami.is_renter:
+        abort(401, 'Доступ запрещён')
+    elif user is None:
         error = 'Пользователь не найден'
     elif not user.is_renter:
         error = 'Пользователь не является арендатором'
@@ -59,7 +107,7 @@ def renter_info(renter_id: int):
 
 @app.route('/stats')
 def stats():
-    users = list(User.query.filter(User.is_renter))
+    users = list(db.session.query(User).filter(User.is_renter))
     for user in users:
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)

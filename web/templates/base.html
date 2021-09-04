@@ -41,26 +41,10 @@
         </ul>
         <div class="d-flex align-items-center">
             {% if current_user.is_authenticated %}
-<!--                <li class="pr-4 font-weight-bolder">Здравствуй, {{ current_user.get_me()["first_name"] }}</li>-->
-
-<!--                <div class="btn-group">-->
-<!--                <button class="dropdown-toggle remove-btn" type="button" id="dropdownMenuButton"-->
-<!--                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                    <img alt="Аватар"-->
-<!--                         src="{{ current_user.get_me()["avatar"] }}"-->
-<!--                         class="avatar" style="object-fit: cover; width: 50px; height:50px;">-->
-<!--                </button>-->
-<!--                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">-->
-<!--                    <div class="d-flex flex-column menu">-->
-<!--                        <a href="/auth/steam">Войти в Steam</a>-->
-<!--                        <a href="/auth/battlenet">Войти в Battle.net</a>-->
-<!--                        <a href="/profile">Профиль</a>-->
-<!--                        <a href="/auth/logout">Выйти из аккаунта</a>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <a href="/logout" type="button" class="btn btn-light mx-3">Выйти</a>
             {% else %}
-                <a href="/auth/login" type="button" class="btn btn-light mx-3">Войти</a>
-                    <a href="/auth/register" type="button" class="btn btn-dark mx-3">Зарегистрироваться</a>
+                <a href="/login" type="button" class="btn btn-light mx-3">Войти</a>
+                <a href="/register" type="button" class="btn btn-dark mx-3">Зарегистрироваться</a>
             {% endif %}
             </div>
     </nav>

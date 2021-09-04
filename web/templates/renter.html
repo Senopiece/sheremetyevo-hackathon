@@ -12,7 +12,9 @@
 
 {% block content %}
 {% if error %}
-<p>{{ error }}</p>
+<div class="alert alert-danger" role="alert">
+  {{error}}
+</div>
 {% endif %}
 {% if not error %}
 {% if msg %}

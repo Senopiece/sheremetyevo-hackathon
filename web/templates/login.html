@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block head %}{{ super() }}{% endblock %}
+{% block title %}{{ super() }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/renter.css') }}"/>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/renter.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+  {{error}}
+</div>
+{% endif %}
+{% if not error %}
+{% if msg %}
+<div class="alert alert-secondary" role="alert">
+    {{msg}}
+</div>
+{% endif %}
+<h1 class="text-center">Вход</h1>
+<form action="" method="post">
+        {% if message %}
+            <div class="alert alert-{{ message_type }}" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.login.label }}<br>
+            {{ form.login(class="form-control") }}<br>
+            {% for error in form.login.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password") }}<br>
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+    </form>
+{% endif %}
+{% endblock %}
