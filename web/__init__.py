@@ -21,7 +21,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 from web.views import *
-from connect_to_blockchain import *
 
 if __name__ == '__main__':
     app.debug = config("DEBUG", cast=bool, default=False)

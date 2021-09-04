@@ -11,20 +11,11 @@
 {% endblock %}
 
 {% block content %}
-{% if msg %}
-    <p>{{ msg }}</p>
-{% endif %}
-{% if not msg %}
-    <h1 class="text-center">Арендатор {{ name }}</h1>
-    <table class="table">
-        <tr>
-            <th>Баланс</th>
-            <td>{{ balance }}</td>
-        </tr>
-        <tr>
-            <th>Тариф</th>
-            <td>{{ tariff }}</td>
-        </tr>
-    </table>
-{% endif %}
+<h1 class="text-center">Арендаторы</h1>
+<table class="table">
+    {% for renter in renters %}
+    <tr>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

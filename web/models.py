@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Float, TypeDecorator
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Float, TypeDecorator, Boolean
 from flask_login import UserMixin
 from web import db
 
@@ -10,6 +10,8 @@ class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True)
     password = Column(String(120), unique=False)
+    is_renter = Column(Boolean())
+    account = Column(String(40))
 
     def __init__(self, username=None, password=None):
         self.username = username
