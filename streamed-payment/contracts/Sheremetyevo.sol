@@ -83,7 +83,7 @@ contract Sheremetyevo {
 
     function withdraw(address user, address to, int256 amount) public only_for_server {
         require(amount > 0, "Amount must be greater than zero");
-        require(_balances.get(from) >= amount, "Balance is not enough");
+        require(_balances.get(user) >= amount, "Balance is not enough");
         payable(to).send(amount);
         setBalance(user,  _balances.get(user) - amount);
     }
