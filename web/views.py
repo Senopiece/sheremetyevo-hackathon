@@ -50,7 +50,7 @@ def login():
         user = db.session.query(User).filter(User.username == form.login.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            return redirect('/')
+            return redirect('/' if user.is_renter else '/admin')
         return render_template('login.html', message_type='danger',
                                message='Неправильный логин или пароль', form=form)
     return render_template('login.html', form=form)
@@ -63,21 +63,17 @@ def logout():
     return redirect('/')
 
 
-@login_required
 @app.route('/')
+@login_required
 def home():
     whoami = db.session.query(User).get(current_user.get_id())
-    error, balance, tariff, name, transactions, account = [None] * 6
-    if whoami is None:
-        error = 'Пользователь не найден'
-    elif not whoami.is_renter:
-        error = 'Пользователь не является арендатором'
-    else:
-        balance = contract_container.getBalance(whoami.account)
-        tariff = contract_container.getTariff(whoami.account)
-        name = whoami.username
-        account = whoami.account
-        transactions = history.filter(sender=account)
+    if not whoami.is_renter:
+        return redirect('/admin')
+    balance = contract_container.getBalance(whoami.account)
+    tariff = contract_container.getTariff(whoami.account)
+    name = whoami.username
+    account = whoami.account
+    transactions = history.filter(sender=account)
     return render_template('index.html', balance=balance if balance else 0,
                            tariff=tariff if tariff else 1, name=name,
                            transactions=enumerate(transactions if transactions else []),
@@ -85,8 +81,8 @@ def home():
                                     (time_to_update[0] // 3600, (time_to_update[0] // 60) % 60))
 
 
-@login_required
 @app.route('/renter/<renter_id>', methods=['GET', 'POST'])
+@login_required
 def renter_info(renter_id: int):
     whoami = db.session.query(User).get(current_user.get_id())
     user = db.session.query(User).get(renter_id)
@@ -112,8 +108,8 @@ def renter_info(renter_id: int):
                            tariff=tariff, name=name, msg=msg)
 
 
-@login_required
 @app.route('/admin')
+@login_required
 def stats():
     whoami = db.session.query(User).get(current_user.get_id())
     if whoami is None or whoami.is_renter:
@@ -123,9 +119,3 @@ def stats():
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)
     return render_template('stats.html', renters=users)
-
-
-@login_required
-@app.route('/payments')
-def payments():
-    return render_template('payments.html')

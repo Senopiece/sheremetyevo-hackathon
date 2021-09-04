@@ -28,14 +28,14 @@
                  src="{{ url_for('static', filename='images/logo.svg') }}"
                  class="logo-img">
         </a>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link active" href="/">Главная</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/payments">Внесенные платежи</a>
-            </li>
-        </ul>
+<!--        <ul class="nav">-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link active" href="/">Главная</a>-->
+<!--            </li>-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link" href="/payments">Внесенные платежи</a>-->
+<!--            </li>-->
+<!--        </ul>-->
         <div class="d-flex align-items-center">
             {% if current_user.is_authenticated %}
                 <a href="/logout" type="button" class="btn btn-light mx-3">Выйти</a>
