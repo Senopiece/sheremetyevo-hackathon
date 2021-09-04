@@ -4,11 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from decouple import config
 
 import logging
-import os
 
-SECRET_KEY = config("SECRET_KEY", default=os.urandom(32))
-DEBUG = config("DEBUG", default=False, cast=bool)
-DB_URI = config("DB_URI", default='sqlite:///db.sqlite3')
+from constants import SECRET_KEY, DEBUG, DB_URI
 
 app = Flask(__name__)
 gunicorn_logger = logging.getLogger('gunicorn.error')
@@ -24,6 +21,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 from web.views import *
+from connect_to_blockchain import *
 
 if __name__ == '__main__':
     app.debug = config("DEBUG", cast=bool, default=False)
