@@ -16,12 +16,11 @@ def connect():
     if OWNER_ADDRESS is None:
         owner_account = network.accounts[0]
     else:
-        owner_account = network.accounts.at(OWNER_ADDRESS)
+        owner_account = network.accounts.at(OWNER_ADDRESS, force=DEBUG)
 
     if CONTRACT_ADDRESS is None:
         brownie_project.IterableMapping.deploy({'from': owner_account})
         contract_container = brownie_project.Sheremetyevo.deploy({'from': owner_account})
-        print('Contract deployed at', contract_container.address)
     else:
         contract_container = brownie_project.Sheremetyevo.at(CONTRACT_ADDRESS)
     return contract_container
