@@ -29,7 +29,7 @@ def renter_info(renter_id: int):
         name = user.username
         transactions = [[], []]  # TODO: get last transactions
     return render_template('renter.html', msg=error, balance=balance, tariff=tariff, name=name,
-                           transactions=transactions)
+                           transactions=enumerate(transactions))
 
 
 @app.route('/renters')
