@@ -11,20 +11,28 @@
 {% endblock %}
 
 {% block content %}
-{% if msg %}
-    <p>{{ msg }}</p>
+{% if error %}
+<p>{{ error }}</p>
 {% endif %}
-{% if not msg %}
-    <h1 class="text-center">Арендатор {{ name }}</h1>
+{% if not error %}
+{% if msg %}
+<div class="alert alert-secondary" role="alert">
+    {{msg}}
+</div>
+{% endif %}
+<h1 class="text-center">Арендатор {{ name }}</h1>
+<form method="post">
     <table class="table">
         <tr>
-            <th>Баланс</th>
-            <td>{{ balance }}</td>
+            <th><label for="balance">Баланс</label></th>
+            <td><input id="balance" type="number" value="{{ balance }}" name="balance"></td>
         </tr>
         <tr>
-            <th>Тариф</th>
-            <td>{{ tariff }}</td>
+            <th><label for="tariff">Тариф</label></th>
+            <td><input id="tariff" type="number" value="{{ tariff }}" name="tariff"></td>
         </tr>
     </table>
+    <button type="submit" class="btn btn-dark">Сохранить</button>
+</form>
 {% endif %}
 {% endblock %}

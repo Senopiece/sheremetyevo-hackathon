@@ -1,7 +1,7 @@
-from flask import render_template
+from flask import render_template, request
 from flask_login import current_user
 
-from connect_to_blockchain import contract_container
+from connect_to_blockchain import contract_container, owner_account
 from iter_day import time_to_update
 from web import app, login_manager
 from web.models import *
@@ -34,10 +34,10 @@ def home():
                                     (time_to_update[0] // 3600, (time_to_update[0] // 60) % 60))
 
 
-@app.route('/renter/<renter_id>')
+@app.route('/renter/<renter_id>', methods=['GET', 'POST'])
 def renter_info(renter_id: int):
     user = User.query.get(renter_id)
-    error, balance, tariff, name, transactions, account = [None] * 6
+    error, balance, tariff, name, transactions, account, msg = [None] * 7
     if user is None:
         error = 'Пользователь не найден'
     elif not user.is_renter:
@@ -46,10 +46,19 @@ def renter_info(renter_id: int):
         balance = contract_container.getBalance(user.account)
         tariff = contract_container.getTariff(user.account)
         name = user.username
-        account = user.account
-        transactions = history.filter(sender=account)
-    return render_template('renter.html', msg=error, balance=balance, tariff=tariff, name=name,
-                           transactions=enumerate(transactions))
+        if request.method == 'POST':
+            new_balance = int(request.form.get('balance'))
+            new_tariff = int(request.form.get('tariff'))
+            if new_balance != balance:
+                contract_container.setBalance(user.account, new_balance, {'from': owner_account})
+                balance = new_balance
+                msg = 'Сохранено'
+            if new_tariff != tariff:
+                contract_container.set(user.account, new_tariff, {'from': owner_account})
+                tariff = new_tariff
+                msg = 'Сохранено'
+    return render_template('renter.html', error=error, balance=balance,
+                           tariff=tariff, name=name, msg=msg)
 
 
 @app.route('/stats')
