@@ -1,4 +1,5 @@
 let web3;
+let contract;
 
 // Initial function
 async function init() {
@@ -15,7 +16,7 @@ async function init() {
             })
             .then(
                 data => {
-                    var contract = new web3.eth.Contract(data["abi"], contract_address);
+                    contract = new web3.eth.Contract(data["abi"], contract_address);
                     console.log(contract);
                 }
             );
