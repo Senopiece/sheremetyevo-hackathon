@@ -85,10 +85,6 @@ contract Sheremetyevo {
         emit tariffChanged(user, uint256(tariff));
     }
 
-    function setBalance(address user, int256 balance) public only_for_server {
-        _balances.set(user, balance);
-    }
-
     function withdraw(address user, address to, int256 amount) public only_for_server {
         require(amount > 0, "Amount must be greater than zero");
         require(_balances.get(user) >= amount, "Balance is not enough");
