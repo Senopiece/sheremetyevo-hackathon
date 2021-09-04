@@ -60,6 +60,7 @@ contract Sheremetyevo {
     using IterableMapping for IterableMapping.Map;
 
     address private _server;
+    uint256 last_iter;
     mapping(address => int256) private _tariffs;
     IterableMapping.Map private _balances;
 
@@ -70,6 +71,7 @@ contract Sheremetyevo {
 
     constructor() {
         _server = msg.sender;
+        last_iter = block.timestamp;
     }
 
     function set(address user, int256 tariff) public only_for_server {
@@ -97,6 +99,8 @@ contract Sheremetyevo {
     }
 
     function iterDay() public only_for_server {
+        require(block.timestamp > last_iter + 1 days, "too early");
+        last_iter = block.timestamp;
         for (uint i = 0; i < _balances.size(); i++) {
             address key = _balances.getKeyAt(i);
             int256 balance = _balances.get(key);
