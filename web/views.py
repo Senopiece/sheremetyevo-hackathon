@@ -110,7 +110,7 @@ def home():
     total_payed = get_total_payed(account, transactions)
 
     return render_template('index.html', balance=balance if balance else 0,
-                           tariff=tariff if tariff else 1, name=name,
+                           tariff=tariff, name=name,
                            total_withdrawed=total_withdrawed, total_payed=total_payed,
                            transactions=enumerate(transactions if transactions else []),
                            next_upd='%d ч %d мин' %
