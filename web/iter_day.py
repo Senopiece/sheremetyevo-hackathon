@@ -13,4 +13,4 @@ def iter_day():
         if time_to_update[0] == 0:
             contract_container.iterDay({'from': owner_account})
             print('Тарифы вычтены')
-            time_to_update[0] = 24 * 3600
+            time_to_update[0] = 11
