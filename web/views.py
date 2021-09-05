@@ -104,12 +104,17 @@ def renter_info(renter_id: int):
         tariff = contract_container.getTariff(user.account)
         name = user.username
         if request.method == 'POST':
-            new_tariff = int(request.form.get('tariff'))
-            if new_tariff != tariff:
-                contract_container.set(user.account, new_tariff,
-                                       {'from': get_account(user.account)})
-                tariff = new_tariff
-                msg = 'Сохранено'
+            if request.form.get('delete'):
+                db.session.delete(user)
+                db.session.commit()
+                msg = 'Пользователь удалён'
+            else:
+                new_tariff = int(request.form.get('tariff'))
+                if new_tariff != tariff:
+                    contract_container.set(user.account, new_tariff,
+                                           {'from': get_account(user.account)})
+                    tariff = new_tariff
+                    msg = 'Сохранено'
     return render_template('renter.html', error=error, balance=balance,
                            tariff=tariff, name=name, msg=msg)
 
