@@ -47,7 +47,8 @@ def register():
         return render_template('register.html', form=form,
                                message='Аккаунт успешно создан', message_type='success',
                                is_admin=not whoami.is_renter)
-    return render_template('register.html', form=form, is_admin=not whoami.is_renter)
+    admin_balance = contract_container.getBalance(whoami.account)
+    return render_template('register.html', admin_balance=admin_balance, form=form, is_admin=not whoami.is_renter)
 
 
 @app.route('/login', methods=['GET', 'POST'])
