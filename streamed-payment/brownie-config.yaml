@@ -3,5 +3,5 @@ networks:
     development:
       cmd_settings:
           default_balance: "100 ether"
-          unlock: ['0xc1B30B3ED830405C72984105568bD3fcD190Ea52', '0x0b8C7aB0c093f69B7677Ed457cD9184C2ff99B5d',
+          unlock: ['0x835A7e646b9c287d357c0eB12E1bdEa7Cfa1922F', '0x0b8C7aB0c093f69B7677Ed457cD9184C2ff99B5d',
                    '0x695aB551Ae196059108E3b2A35D38317AaCEC75d', '0xA400eaA1be40149b8963D9747d8c85f2F15C2082']
