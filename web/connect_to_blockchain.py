@@ -20,7 +20,7 @@ def connect():
 
     if DEBUG:
         for a in network.accounts[-4:]:
-            network.accounts[0].transfer(a, 10000)
+            network.accounts[0].transfer(a.address, "1 ether")
 
     if OWNER_ADDRESS is None:
         owner_account = network.accounts.at('0x835A7e646b9c287d357c0eB12E1bdEa7Cfa1922F')
@@ -40,4 +40,4 @@ def get_account(address) -> brownie.network.account.Account:
 
 if contract_container is None:
     connect()
-    accounts[0].transfer("0x08AF794f6E06E873aa8Ef6B55F809Df6E3B7F493", "1 ether")
+    # accounts[0].transfer("0x835A7e646b9c287d357c0eB12E1bdEa7Cfa1922F", "1 ether")
