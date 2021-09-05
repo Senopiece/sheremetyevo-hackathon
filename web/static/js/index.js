@@ -21,15 +21,27 @@ function is_not_valid(address) {
     return (address === "") || (!web3.utils.isAddress(address)) || (!address.startsWith('0x'));
 }
 
-async function buy() {
+async function buy(amount) {
     await init();
     let terminal_address = (await fetch("/user-address").then(response => response.json()))["address"];
-    contract.methods.pay(terminal_address).send(
+    let tx = await contract.methods.pay(terminal_address).send(
         {
             from: user_address,
-            to: contract_address
+            value: parseFloat(amount),
+            nonce: 1
         }
-    )
+    );
+    await fetch("/buy", {
+        method: 'POST',
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify({"tx_hash": tx.transactionHash})
+    });
 }
 
 async function withdraw(amount) {

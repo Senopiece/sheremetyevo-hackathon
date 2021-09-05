@@ -8,6 +8,7 @@ from forms import RegisterForm, LoginForm
 from web import app, login_manager, db
 from web.models import *
 from brownie import history
+from brownie.network.state import Chain
 
 
 @login_manager.user_loader
@@ -77,7 +78,8 @@ def home():
     tariff = contract_container.getTariff(whoami.account)
     name = whoami.username
     account = whoami.account
-    transactions = history.filter(sender=account)
+    transactions = history.filter(key=lambda k: "withdrawed" in k.events and k.events["withdrawed"][0]["user"] == account)
+    transactions.extend(history.filter(key=lambda k: "payed" in k.events and k.events["payed"][0]["user"] == account))
     return render_template('index.html', balance=balance if balance else 0,
                            tariff=tariff if tariff else 1, name=name,
                            transactions=enumerate(transactions if transactions else []),
@@ -139,6 +141,19 @@ def withdraw():
     except VirtualMachineError as e:
         return jsonify({'status': "Ошибка во время транзакции. Доп. инфа: " + str(e.revert_msg)})
     return jsonify({'status': "Пополение прошло успешно. Доп. инфа: " + str(res)})
+
+
+@app.route('/buy', methods=['POST'])
+@login_required
+def buy():
+    chain = Chain()
+    tx_hash = request.json["tx_hash"]
+
+    whoami = db.session.query(User).get(current_user.get_id())
+    if whoami is None:
+        abort(401, 'Доступ запрещён')
+    history._add_tx(chain.get_transaction(tx_hash))
+    return 200
 
 
 @app.route('/user-address')
