@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from decouple import config
 
 import logging
 from threading import Thread
@@ -27,5 +26,4 @@ from web.views import *
 if __name__ == '__main__':
     thread = Thread(target=iter_day)
     thread.start()
-    app.debug = config("DEBUG", cast=bool, default=False)
     app.run("0.0.0.0", port=8000)
