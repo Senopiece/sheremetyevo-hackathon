@@ -12,7 +12,8 @@
         <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/libs/bootstrap.min.css') }}">
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='css/libs/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 
         {% block css %}{% endblock %}
@@ -28,16 +29,23 @@
                  src="{{ url_for('static', filename='images/logo.svg') }}"
                  class="logo-img">
         </a>
-<!--        <ul class="nav">-->
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link active" href="/">Главная</a>-->
-<!--            </li>-->
-<!--            <li class="nav-item">-->
-<!--                <a class="nav-link" href="/payments">Внесенные платежи</a>-->
-<!--            </li>-->
-<!--        </ul>-->
+        <!--        <ul class="nav">-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link active" href="/">Главная</a>-->
+        <!--            </li>-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link" href="/payments">Внесенные платежи</a>-->
+        <!--            </li>-->
+        <!--        </ul>-->
         <div class="d-flex align-items-center">
             {% if is_admin %}
+                <div class="mx-3">
+                    <input type="number" step="0.01" value="0"
+                                                  id="withdraw-amount">
+                </div>
+                <button class="btn btn-light mx-3"
+                        onclick="withdraw($('#withdraw-amount')[0].value)">Снять со счета
+                </button>
                 <a href="/register" type="button" class="btn btn-dark mx-3">Добавить арендатора</a>
             {% endif %}
             {% if current_user.is_authenticated %}
