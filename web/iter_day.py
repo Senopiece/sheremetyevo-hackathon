@@ -2,7 +2,7 @@ import time
 
 from connect_to_blockchain import contract_container, owner_account
 
-time_to_update = [24 * 3600]
+time_to_update = [11]
 
 
 def iter_day():
