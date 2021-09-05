@@ -142,7 +142,7 @@ def renter_info(renter_id: int):
                 new_tariff = int(request.form.get('tariff'))
                 if new_tariff != tariff:
                     contract_container.set(user.account, new_tariff,
-                                           {'from': get_account(user.account)})
+                                           {'from': get_account(whoami.account)})
                     tariff = new_tariff
                     msg = 'Сохранено'
     return render_template('renter.html', error=error, balance=balance,
@@ -162,7 +162,9 @@ def stats():
         user.tariff = contract_container.getTariff(user.account)
         total_tariff += user.tariff
         setattr(user, "total_payed", get_total_payed(user.account))
-    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter, total_tariff=total_tariff)
+    admin_balance = contract_container.getBalance(whoami.account)
+    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter, admin_balance=admin_balance,
+                           total_tariff=total_tariff)
 
 
 @app.route('/withdraw', methods=['POST'])

@@ -39,6 +39,7 @@
         <!--        </ul>-->
         <div class="d-flex align-items-center">
             {% if is_admin %}
+                <p style="margin: 0;">Доступно к списанию: {{ "{:,.2f}₽".format(admin_balance) }}</p>
                 <div class="mx-3">
                     <input type="number" step="0.01" value="0"
                                                   id="withdraw-amount">
