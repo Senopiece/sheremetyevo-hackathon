@@ -18,8 +18,12 @@ def connect():
     else:
         network.connect('production')
 
+    if DEBUG:
+        for a in network.accounts[-4:]:
+            network.accounts[0].transfer(a, 10000)
+
     if OWNER_ADDRESS is None:
-        owner_account = network.accounts[0]
+        owner_account = network.accounts.at('0x835A7e646b9c287d357c0eB12E1bdEa7Cfa1922F')
     else:
         owner_account = network.accounts.at(OWNER_ADDRESS, force=DEBUG)
 
