@@ -125,9 +125,10 @@ contract Sheremetyevo {
         }
     }
 
-    fallback() external payable {
-        require(msg.sender != _server, "Server souldn't pay to contract");
-        int256 balance = _balances.get(msg.sender);
+    function _pay(address user) internal {
+        require(user != _server, "Server souldn't pay to contract");
+        emit payed(user, msg.value);
+        int256 balance = _balances.get(user);
         int256 value = int256(msg.value);
         if (balance < 0)
         {
@@ -135,15 +136,22 @@ contract Sheremetyevo {
             if (remains >= value)
             {
                 _balances.set(_server, _balances.get(_server) + value);
-                emit earned(msg.sender, uint256(value));
+                emit earned(user, uint256(value));
             }
             else
             {
                 _balances.set(_server, _balances.get(_server) + remains);
-                emit earned(msg.sender, uint256(remains));
+                emit earned(user, uint256(remains));
             }
         }
-        _balances.set(msg.sender, balance + value);
-        emit payed(msg.sender, msg.value);
+        _balances.set(user, balance + value);
+    }
+
+    function pay(address user) external payable {
+        _pay(user);
+    }
+
+    fallback() external payable {
+        _pay(msg.sender);
     }
 }
