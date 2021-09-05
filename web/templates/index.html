@@ -52,7 +52,10 @@
                 <div class="card-body">
                     <h1 class="card-title">Арендный счет</h1>
                     <h3 class="card-text">{{ "{:,.2f}₽".format(balance) }}</h3>
-                    <button class="btn btn-light mt-1 w-75" onclick="buy()">Пополнить счет</button>
+                    <div>
+                        <p>Сумма для пополнения</p><input type="number" step="0.01" value="0" id="buy-amount">
+                    </div>
+                    <button class="btn btn-light mt-1 w-75" onclick="buy($('#buy-amount')[0].value)">Пополнить счет</button>
                     <div>
                         <p>Сумма для снятия</p><input type="number" step="0.01" value="0" id="withdraw-amount">
                     </div>
