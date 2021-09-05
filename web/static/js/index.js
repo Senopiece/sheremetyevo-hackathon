@@ -9,7 +9,7 @@ async function init() {
     if (typeof window.ethereum === "undefined") {
         alert("Please install MetaMask") // AC-305-01
     } else {
-        user_address = window.ethereum.selectedAddress;
+        user_address = window.ethereum.request({ method: 'eth_requestAccounts' })[0];
         let data = fetch("static/js/abi/Sheremetyevo.json").then(response => response.json());
         contract_address = (await fetch("/contract-address").then(response => response.json()))["address"];
         data = await data;
@@ -42,7 +42,7 @@ async function buy(amount) {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({"tx_hash": tx.transactionHash})
     });
-    Location.reload()
+    location.reload();
 }
 
 async function withdraw(amount) {
@@ -61,7 +61,7 @@ async function withdraw(amount) {
     }).then(response => response.json().then(
         json => {
             alert(json["status"]);
-            Location.reload()
+            location.reload();
         })
     )
 }

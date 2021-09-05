@@ -21,6 +21,7 @@
 
 {% block content %}
 <h2>Арендаторы</h2>
+<h4>Общая арендная плата в день: {{ total_tariff }}₽</h4>
 <table id="table"
        data-sortable="true"
        data-toggle="table"
@@ -49,7 +50,7 @@
             <td><a href="/renter/{{ renter.id }}">{{ renter.username }}</a></td>
             <td>{{ renter.balance }}₽</td>
             <td style="color: red;">{{ renter.tariff }}₽</td>
-            <td style="color: green;">+45,540₽</td>
+            <td style="color: green;">+{{ renter.total_payed }}₽</td>
         </tr>
     {% endfor %}
     <!--    <tr>-->
