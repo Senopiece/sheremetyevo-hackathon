@@ -37,12 +37,15 @@
 <!--            </li>-->
 <!--        </ul>-->
         <div class="d-flex align-items-center">
+            {% if is_admin %}
+                <a href="/register" type="button" class="btn btn-dark mx-3">Добавить арендатора</a>
+            {% endif %}
             {% if current_user.is_authenticated %}
                 <a href="/logout" type="button" class="btn btn-light mx-3">Выйти</a>
             {% else %}
                 <a href="/login" type="button" class="btn btn-dark mx-3">Войти</a>
             {% endif %}
-            </div>
+        </div>
     </nav>
 {% endblock %}</div>
 
