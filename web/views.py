@@ -1,3 +1,4 @@
+from brownie.exceptions import VirtualMachineError
 from flask import render_template, request, abort, make_response, redirect, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 
@@ -123,18 +124,30 @@ def stats():
 
 @app.route('/withdraw', methods=['POST'])
 @login_required
-def withdraw(metamask_addr: str):
+def withdraw():
     metamask_addr = request.json["metamask_addr"]
     amount = request.json["amount"]
 
     whoami = db.session.query(User).get(current_user.get_id())
-    if whoami is None or whoami.is_renter:
+    if whoami is None:
         abort(401, 'Доступ запрещён')
-    res = contract_container.withdraw(whoami.account, metamask_addr, amount)
+    try:
+        res = contract_container.withdraw(whoami.account, metamask_addr, amount)
+    except VirtualMachineError as e:
+        return jsonify({'status': "Ошибка во время транзакции. Доп. инфа: " + str(e.revert_msg)})
     return jsonify({'status': "Пополение прошло успешно. Доп. инфа: " + str(res)})
+
+
+@app.route('/user-address')
+@login_required
+def get_user_addr():
+    whoami = db.session.query(User).get(current_user.get_id())
+    if whoami is None:
+        abort(401, 'Доступ запрещён')
+    return jsonify({'address': whoami.account})
 
 
 @app.route('/contract-address')
 @login_required
-def get_addr():
+def get_contract_addr():
     return jsonify({'address': contract_container.address})

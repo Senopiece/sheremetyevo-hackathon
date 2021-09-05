@@ -1,6 +1,7 @@
 let web3;
 let contract;
 let user_address;
+let contract_address;
 
 // Initial function
 async function init() {
@@ -9,13 +10,10 @@ async function init() {
         alert("Please install MetaMask") // AC-305-01
     } else {
         user_address = window.ethereum.selectedAddress;
-        fetch("static/js/abi/Sheremetyevo.json")
-            .then(response => response.json())
-            .then(
-                data => fetch("/contract-address").then(response => response.json()).then(address => {
-                        contract = new web3.eth.Contract(data["abi"], address["address"]);
-                    }
-                ));
+        let data = fetch("static/js/abi/Sheremetyevo.json").then(response => response.json());
+        contract_address = (await fetch("/contract-address").then(response => response.json()))["address"];
+        data = await data;
+        contract = new web3.eth.Contract(data["abi"], contract_address);
     }
 }
 
@@ -25,13 +23,19 @@ function is_not_valid(address) {
 
 async function buy() {
     await init();
-    contract.pay(user_address);
+    let terminal_address = (await fetch("/user-address").then(response => response.json()))["address"];
+    contract.methods.pay(terminal_address).send(
+        {
+            from: user_address,
+            to: contract_address
+        }
+    )
 }
 
 async function withdraw(amount) {
     await init();
     amount = parseFloat(amount);
-    fetch("withdraw", {
+    fetch("/withdraw", {
         method: 'POST',
         mode: 'cors',
         cache: 'no-cache',
@@ -41,5 +45,7 @@ async function withdraw(amount) {
         },
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({"amount": amount, "metamask_addr": user_address})
-    }).then(response => alert(response.json()["status"]))
+    }).then(response => response.json().then(
+        json => alert(json["status"]))
+    )
 }
