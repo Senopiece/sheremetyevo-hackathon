@@ -107,7 +107,7 @@ def renter_info(renter_id: int):
             if request.form.get('delete'):
                 db.session.delete(user)
                 db.session.commit()
-                msg = 'Пользователь удалён'
+                return redirect('/admin')
             else:
                 new_tariff = int(request.form.get('tariff'))
                 if new_tariff != tariff:
