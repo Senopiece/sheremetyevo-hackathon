@@ -42,7 +42,7 @@ async function buy(amount) {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({"tx_hash": tx.transactionHash})
     });
-    Location.reload()
+    location.reload();
 }
 
 async function withdraw(amount) {
@@ -61,7 +61,7 @@ async function withdraw(amount) {
     }).then(response => response.json().then(
         json => {
             alert(json["status"]);
-            Location.reload()
+            location.reload();
         })
     )
 }

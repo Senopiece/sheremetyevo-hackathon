@@ -75,11 +75,24 @@ def get_transactions(account: str):
         key=lambda k: "withdrawed" in k.events and k.events["withdrawed"][0]["user"] == account)
     transactions.extend(history.filter(key=lambda k: "payed" in k.events and k.events["payed"][0]["user"] == account))
     import locale
-    locale.setlocale(locale.LC_TIME, ('RU','UTF8'))
+    locale.setlocale(locale.LC_TIME, ('RU', 'UTF8'))
     for trans in transactions:
         tr_time = datetime.fromtimestamp(trans.timestamp).strftime("%d %b\n%H:%M")
         setattr(trans, "time", tr_time)
+    transactions.sort(key=lambda k: k.timestamp, reverse=True)
     return transactions
+
+
+def get_total_payed(account: str, transactions=None):
+    if transactions is None:
+        transactions = get_transactions(account)
+    return sum([tr.events["payed"]["value"] if "payed" in tr.events else 0 for tr in transactions])
+
+
+def get_total_withdrawed(account: str, transactions=None):
+    if transactions is None:
+        transactions = get_transactions(account)
+    return sum([tr.events["withdrawed"]["amount"] if "withdrawed" in tr.events else 0 for tr in transactions])
 
 
 @app.route('/')
@@ -93,8 +106,8 @@ def home():
     name = whoami.username
     account = whoami.account
     transactions = get_transactions(account)
-    total_withdrawed = sum([tr.events["withdrawed"]["amount"] if "withdrawed" in tr.events else 0 for tr in transactions])
-    total_payed = sum([tr.events["payed"]["value"] if "payed" in tr.events else 0 for tr in transactions])
+    total_withdrawed = get_total_withdrawed(account, transactions)
+    total_payed = get_total_payed(account, transactions)
 
     return render_template('index.html', balance=balance if balance else 0,
                            tariff=tariff if tariff else 1, name=name,
@@ -143,10 +156,13 @@ def stats():
     if whoami is None or whoami.is_renter:
         abort(401, 'Доступ запрещён')
     users = list(db.session.query(User).filter(User.is_renter))
+    total_tariff = 0
     for user in users:
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)
-    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter)
+        total_tariff += user.tariff
+        setattr(user, "total_payed", get_total_payed(user.account))
+    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter, total_tariff=total_tariff)
 
 
 @app.route('/withdraw', methods=['POST'])
