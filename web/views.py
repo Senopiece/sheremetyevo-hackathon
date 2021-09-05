@@ -121,6 +121,19 @@ def stats():
     return render_template('stats.html', renters=users)
 
 
+@app.route('/withdraw', methods=['POST'])
+@login_required
+def withdraw(metamask_addr: str):
+    metamask_addr = request.json["metamask_addr"]
+    amount = request.json["amount"]
+
+    whoami = db.session.query(User).get(current_user.get_id())
+    if whoami is None or whoami.is_renter:
+        abort(401, 'Доступ запрещён')
+    res = contract_container.withdraw(whoami.account, metamask_addr, amount)
+    return jsonify({'status': "Пополение прошло успешно. Доп. инфа: " + str(res)})
+
+
 @app.route('/contract-address')
 @login_required
 def get_addr():
