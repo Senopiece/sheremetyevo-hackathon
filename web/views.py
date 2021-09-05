@@ -129,7 +129,7 @@ def renter_info(renter_id: int):
                 new_tariff = int(request.form.get('tariff'))
                 if new_tariff != tariff:
                     contract_container.set(user.account, new_tariff,
-                                           {'from': get_account(user.account)})
+                                           {'from': get_account(whoami.account)})
                     tariff = new_tariff
                     msg = 'Сохранено'
     return render_template('renter.html', error=error, balance=balance,
