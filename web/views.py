@@ -146,7 +146,8 @@ def stats():
     for user in users:
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)
-    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter)
+    admin_balance = contract_container.getBalance(whoami.account)
+    return render_template('stats.html', renters=users, admin_balance=admin_balance, is_admin=not whoami.is_renter)
 
 
 @app.route('/withdraw', methods=['POST'])
