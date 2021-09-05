@@ -64,4 +64,7 @@
 </footer>
 </html>
 
-{% block js %}{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/web3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}

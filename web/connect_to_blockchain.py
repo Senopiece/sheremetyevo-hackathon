@@ -25,6 +25,8 @@ def connect():
     else:
         owner_account = network.accounts.at(OWNER_ADDRESS, force=DEBUG)
 
+    print('### Owner PK:', owner_account.private_key)
+
     if CONTRACT_ADDRESS is None:
         brownie_project.IterableMapping.deploy({'from': owner_account})
         contract_container = brownie_project.Sheremetyevo.deploy({'from': owner_account})
