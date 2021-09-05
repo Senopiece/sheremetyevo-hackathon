@@ -102,7 +102,7 @@ contract Sheremetyevo {
     }
 
     function iterDay() public only_for_server {
-        require(block.timestamp > last_iter + 1 days, "too early");
+        require(block.timestamp > last_iter + 10 seconds, "too early");
         last_iter = block.timestamp;
         for (uint i = 0; i < _balances.size(); i++) {
             address key = _balances.getKeyAt(i);

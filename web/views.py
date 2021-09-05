@@ -27,16 +27,17 @@ def unauthorized(error):
 @login_required
 def register():
     whoami = db.session.query(User).get(current_user.get_id())
+    admin_balance = contract_container.getBalance(whoami.account)
     form = RegisterForm()
     if form.validate_on_submit():
         if db.session.query(User).filter(User.username == form.login.data).first():
             return render_template('register.html', form=form,
                                    message='Пользователь с таким логином уже существует',
-                                   message_type='danger', is_admin=not whoami.is_renter)
+                                   message_type='danger', is_admin=not whoami.is_renter, admin_balance=admin_balance)
         if db.session.query(User).filter(User.account == form.account_address.data).first():
             return render_template('register.html', form=form,
                                    message='Пользователь с таким адресом аккаунта уже существует',
-                                   message_type='danger', is_admin=not whoami.is_renter)
+                                   message_type='danger', is_admin=not whoami.is_renter, admin_balance=admin_balance)
         user = User()
         user.username = form.login.data
         user.account = form.account_address.data
@@ -46,8 +47,8 @@ def register():
         db.session.commit()
         return render_template('register.html', form=form,
                                message='Аккаунт успешно создан', message_type='success',
-                               is_admin=not whoami.is_renter)
-    return render_template('register.html', form=form, is_admin=not whoami.is_renter)
+                               is_admin=not whoami.is_renter, admin_balance=admin_balance)
+    return render_template('register.html', admin_balance=admin_balance, form=form, is_admin=not whoami.is_renter)
 
 
 @app.route('/login', methods=['GET', 'POST'])
