@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from brownie.exceptions import VirtualMachineError
 from flask import render_template, request, abort, make_response, redirect, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
@@ -65,6 +67,18 @@ def logout():
     return redirect('/')
 
 
+def get_transactions(account: str):
+    transactions = history.filter(
+        key=lambda k: "withdrawed" in k.events and k.events["withdrawed"][0]["user"] == account)
+    transactions.extend(history.filter(key=lambda k: "payed" in k.events and k.events["payed"][0]["user"] == account))
+    import locale
+    locale.setlocale(locale.LC_TIME, ('RU','UTF8'))
+    for trans in transactions:
+        tr_time = datetime.fromtimestamp(trans.timestamp).strftime("%d %b\n%H:%M")
+        setattr(trans, "time", tr_time)
+    return transactions
+
+
 @app.route('/')
 @login_required
 def home():
@@ -75,10 +89,13 @@ def home():
     tariff = contract_container.getTariff(whoami.account)
     name = whoami.username
     account = whoami.account
-    transactions = history.filter(key=lambda k: "withdrawed" in k.events and k.events["withdrawed"][0]["user"] == account)
-    transactions.extend(history.filter(key=lambda k: "payed" in k.events and k.events["payed"][0]["user"] == account))
+    transactions = get_transactions(account)
+    total_withdrawed = sum([tr.events["withdrawed"]["amount"] if "withdrawed" in tr.events else 0 for tr in transactions])
+    total_payed = sum([tr.events["payed"]["value"] if "payed" in tr.events else 0 for tr in transactions])
+
     return render_template('index.html', balance=balance if balance else 0,
                            tariff=tariff if tariff else 1, name=name,
+                           total_withdrawed=total_withdrawed, total_payed=total_payed,
                            transactions=enumerate(transactions if transactions else []),
                            next_upd='%d ч %d мин' %
                                     (time_to_update[0] // 3600, (time_to_update[0] // 60) % 60))

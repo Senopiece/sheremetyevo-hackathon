@@ -15,6 +15,12 @@
     margin: 0 -1px;
 }
 
+.vertical {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .transaction-block p {
     margin-bottom: 5px;
     color: rgba(72, 83, 91, 0.8);

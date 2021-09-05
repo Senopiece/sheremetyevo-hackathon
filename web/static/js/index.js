@@ -42,6 +42,7 @@ async function buy(amount) {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({"tx_hash": tx.transactionHash})
     });
+    Location.reload()
 }
 
 async function withdraw(amount) {
@@ -58,6 +59,9 @@ async function withdraw(amount) {
         referrerPolicy: 'no-referrer',
         body: JSON.stringify({"amount": amount, "metamask_addr": user_address})
     }).then(response => response.json().then(
-        json => alert(json["status"]))
+        json => {
+            alert(json["status"]);
+            Location.reload()
+        })
     )
 }
