@@ -17,7 +17,7 @@ class RegisterForm(FlaskForm):
         validators=[Length(40, 42, message='Длина адреса - 40 или 42 символа')]
     )
 
-    submit = SubmitField('Зарегистрироваться')
+    submit = SubmitField('Зарегистрировать')
 
 
 class LoginForm(FlaskForm):

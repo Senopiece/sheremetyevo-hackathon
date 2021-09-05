@@ -20,8 +20,6 @@ def connect():
 
     if OWNER_ADDRESS is None:
         owner_account = network.accounts[0]
-        # accounts[0].transfer(accounts[2], "1 ether")
-        # accounts[0].transfer(accounts[3], "1 ether")
     else:
         owner_account = network.accounts.at(OWNER_ADDRESS, force=DEBUG)
 

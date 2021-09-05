@@ -24,17 +24,19 @@ def unauthorized(error):
 
 
 @app.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
+    whoami = db.session.query(User).get(current_user.get_id())
     form = RegisterForm()
     if form.validate_on_submit():
         if db.session.query(User).filter(User.username == form.login.data).first():
             return render_template('register.html', form=form,
                                    message='Пользователь с таким логином уже существует',
-                                   message_type='danger')
+                                   message_type='danger', is_admin=not whoami.is_renter)
         if db.session.query(User).filter(User.account == form.account_address.data).first():
             return render_template('register.html', form=form,
                                    message='Пользователь с таким адресом аккаунта уже существует',
-                                   message_type='danger')
+                                   message_type='danger', is_admin=not whoami.is_renter)
         user = User()
         user.username = form.login.data
         user.account = form.account_address.data
@@ -43,8 +45,9 @@ def register():
         db.session.add(user)
         db.session.commit()
         return render_template('register.html', form=form,
-                               message='Аккаунт успешно создан', message_type='success')
-    return render_template('register.html', form=form)
+                               message='Аккаунт успешно создан', message_type='success',
+                               is_admin=not whoami.is_renter)
+    return render_template('register.html', form=form, is_admin=not whoami.is_renter)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -118,12 +121,17 @@ def renter_info(renter_id: int):
         tariff = contract_container.getTariff(user.account)
         name = user.username
         if request.method == 'POST':
-            new_tariff = int(request.form.get('tariff'))
-            if new_tariff != tariff:
-                contract_container.set(user.account, new_tariff,
-                                       {'from': get_account(user.account)})
-                tariff = new_tariff
-                msg = 'Сохранено'
+            if request.form.get('delete'):
+                db.session.delete(user)
+                db.session.commit()
+                return redirect('/admin')
+            else:
+                new_tariff = int(request.form.get('tariff'))
+                if new_tariff != tariff:
+                    contract_container.set(user.account, new_tariff,
+                                           {'from': get_account(user.account)})
+                    tariff = new_tariff
+                    msg = 'Сохранено'
     return render_template('renter.html', error=error, balance=balance,
                            tariff=tariff, name=name, msg=msg)
 
@@ -138,7 +146,7 @@ def stats():
     for user in users:
         user.balance = contract_container.getBalance(user.account)
         user.tariff = contract_container.getTariff(user.account)
-    return render_template('stats.html', renters=users)
+    return render_template('stats.html', renters=users, is_admin=not whoami.is_renter)
 
 
 @app.route('/withdraw', methods=['POST'])
